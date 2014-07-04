@@ -1,3 +1,4 @@
+
 insert into TGG008_DOWN
 select 
 CASE 
@@ -71,7 +72,11 @@ SH.USERPHONE as TX_DTOPGO5, --Teléfono
 SH.USEREMAIL as TX_DTOPGO6,
 TH.TIMESTAMP as TM_PAGO,
 null as TM_DISP, --alter table tgg008_down modify tm_disp timestamp
-(select ST_PAGO from ad_quickcodes where quickcode='STATUS' and instance_name='CBGGBP001' and newcode= TH.STATUSID and rownum=1) as ST_PAGO, --Convertir a ST MULTIPAGOS 1
+CASE
+    WHEN TH.STATUSID in (select id from dbsbgl.status where keycode in ('INT')) THEN '1'
+    WHEN TH.STATUSID in (select id from dbsbgl.status where keycode in ('REJMP')) THEN '2'
+    ELSE (select ST_PAGO from dbsbgl.ad_quickcodes where quickcode='STATUS' and instance_name='CBGGBP001' and newcode= TH.STATUSID and rownum=1) 
+END as ST_PAGO, --Convertir a ST MULTIPAGOS 1
 null as TM_CONCIL, --alter table tgg008_down modify tm_concil timestamp 
 CASE 
 WHEN SH.CURRENCYID = 1 THEN '0' --Pesos

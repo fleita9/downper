@@ -1,4 +1,3 @@
-
 insert into TGG008_DOWN
 select 
 CASE 
@@ -6,6 +5,7 @@ WHEN FOLIO is not null then to_number(FOLIO)
 WHEN FOLIO is null then TH.ID
 END FOLIO ,
 to_number(A.OLDID) as CD_ENTIDAD,
+--(A.OLDID) as CD_ENTIDAD,
 cast(regexp_replace(N.KEYCODE, '[^0-9]+', '') as number) CD_NIVEL1,
 0 as CD_NIVEL2,
 to_number(APC.KEYCODE) as TP_SERVICIO,
@@ -139,7 +139,27 @@ TH.ID as CID,
 CASE
     WHEN TH.STATUSID IN (select id from dbsbgl.status where keycode in ('AMP', 'AUTH')) THEN 8 --Los estatus autorizados de la 8
     ELSE 6
-END TGG --Indica si va a la tabla 6 o la 8
+END TGG, --Indica si va a la tabla 6 o la 8
+INTR.TRANSACTIONCODE AS CD_TRANSACCION,
+2 AS TP_MENSAJE,
+(select contract from dbsbgl.contract where id = INTR.CONTRACT_ID) as NU_AFILIACION,
+SH.ORDERPARAM as NU_TRANSMISION, 
+SH.REFERENCEID as NU_REFERENCIA,
+INTR.TXTPETICION as TX_PETICION,
+INTR.AUTORIZATIONCODE as CD_AUTORIZACION,
+INTR.STARTTIME as TM_INICIO,
+INTR.FINISHTIME as TM_FIN,
+INTR.WAITTIME as TM_ESPERA,
+INTR.TRANSACTIOTYPE as TPO_TRANSACCION,
+INTR.MONTHYEARACCOUNTING as FH_CONTABILIZATRAN,
+INTR.QPS as CD_QPS,
+INTR.SFLAG as CD_SFLAG,
+INTR.TXTRESPONSE as TX_RESPUESTA,
+INTR.CRIPTOGRAM as TX_CRIPTOGRAMA,
+'3.4' as TX_VERSION,
+ INTR.LABELTAG as CD_LABEL,
+ INTR.AIDTAG as CD_AID,
+ INTR.CONCILIATION as CD_CONCILIACION
 from 
 (
 select * from dbsbgl.transactionhistory 
@@ -161,4 +181,8 @@ join dbsbgl.transactiontype TT
 on TH.TRANSACTIONTYPEID = TT.ID
 join dbsbgl.platform PT
 on TH.platformid = PT.ID
+left join dbsbgl.interredTransaction INTR
+on SH.SALEID = INTR.SALE_ID
+and TH.AUTHORIZATION = trim(INTR.AUTORIZATIONCODE)
 WHERE not exists (select 1 from TGG008_DOWN X WHERE X.CID = TH.ID)
+and REGEXP_LIKE (oldid,'^[[:digit:]]+$')

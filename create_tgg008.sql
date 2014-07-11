@@ -104,3 +104,26 @@ CREATE SYNONYM DBSBGL.TGG008_DOWN FOR BGGBP001.TGG008_DOWN;
 
 
 GRANT DELETE, INSERT, SELECT, UPDATE ON BGGBP001.TGG008_DOWN TO DBSBGL;
+
+
+
+alter table tgg008_down add  CD_TRANSACCION varchar2(30);
+alter table tgg008_down add  TP_MESSAGE number(4);
+alter table tgg008_down add  NU_AFILIACION varchar2(7);
+alter table tgg008_down add  NU_TRANSMISION varchar2(50);
+alter table tgg008_down add  NU_REFERENCIA varchar2(30);
+alter table tgg008_down add  TX_PETICION varchar2(4000);
+alter table tgg008_down add  CD_AUTORIZACION varchar2(6);
+alter table tgg008_down add  TM_INICIO timestamp;
+alter table tgg008_down add  TM_FIN timestamp;
+alter table tgg008_down add  TM_ESPERA timestamp;
+alter table tgg008_down add  TP_TRANSACCION varchar2(3);
+alter table tgg008_down add  FH_CONTABILIZATRAN varchar2(4);
+alter table tgg008_down add  CD_QPS varchar2(2);
+alter table tgg008_down add  CD_SFLAG varchar2(2);
+alter table tgg008_down add  TX_RESPUESTA varchar2(4000);
+alter table tgg008_down add  TX_CRIPTOGRAMA varchar2(16);
+alter table tgg008_down add  TX_VERSION varchar2(10);
+alter table tgg008_down add  CD_LABEL varchar2(40);
+alter table tgg008_down add  CD_AID varchar2(30);
+alter table tgg008_down add  CD_CONCILIACION number(4);

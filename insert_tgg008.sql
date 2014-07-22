@@ -34,15 +34,12 @@ to_number(APC.KEYCODE) as TP_SERVICIO,
             END              
     END TP_PAGO, 
 TH.AUTHORIZATION as CD_AUTPGO,
-SH.REFERENCEID as TX_PARAM1,
+nvl(SH.REFERENCEID,' ') as TX_PARAM1,
 SH.userfullname as TX_PARAM2,
-SH.orderparam as tx_param3,
+nvl(SH.orderparam,' ') as tx_param3,
 '                ' as tx_param4,
 SH.EXTRAPARAMS as tx_param5,
-CASE
-    WHEN (TH.AMOUNT - TH.USERCHARGE) <= 0 THEN TH.AMOUNT
-    ELSE (TH.AMOUNT - TH.USERCHARGE)
-END as IM_SERVPGO,  --Se revisa que no sea negativo
+TH.AMOUNT as IM_SERVPGO,  --Se revisa que no sea negativo // AMOUNT TIENE EL IMPORTE ORIGINAL
 CASE
     WHEN TH.COMMERCECHARGE is not null then TH.COMMERCECHARGE
     WHEN TH.COMMERCECHARGE is       null then TH.USERCHARGE
@@ -111,7 +108,7 @@ END as CD_FINANCIAMIENTO,
 'MP2' as TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
 0 as SOBTASA, 
 0 as IM_IMPTO5, 
-TH.AMOUNT as IM_TOTCOBRADO, 
+(TH.AMOUNT + nvl(TH.USERCHARGE,0)) as IM_TOTCOBRADO, --Cuando el usuario absorbe la comisión, se suma al importe total cobrado
 '0' as ST_COBRO, 
 '0' as ST_CONTRACARGO,
 null as NU_PARCIALIDAD,
@@ -143,8 +140,8 @@ END TGG, --Indica si va a la tabla 6 o la 8
 INTR.TRANSACTIONCODE AS CD_TRANSACCION,
 2 AS TP_MENSAJE,
 (select contract from dbsbgl.contract where id = INTR.CONTRACT_ID) as NU_AFILIACION,
-SH.ORDERPARAM as NU_TRANSMISION, 
-SH.REFERENCEID as NU_REFERENCIA,
+nvl(SH.ORDERPARAM,' ') as NU_TRANSMISION, 
+nvl(SH.REFERENCEID,' ') as NU_REFERENCIA,
 INTR.TXTPETICION as TX_PETICION,
 INTR.AUTORIZATIONCODE as CD_AUTORIZACION,
 INTR.STARTTIME as TM_INICIO,
@@ -185,4 +182,4 @@ left join dbsbgl.interredTransaction INTR
 on SH.SALEID = INTR.SALE_ID
 and TH.AUTHORIZATION = trim(INTR.AUTORIZATIONCODE)
 WHERE not exists (select 1 from TGG008_DOWN X WHERE X.CID = TH.ID)
-and REGEXP_LIKE (oldid,'^[[:digit:]]+$')
+and REGEXP_LIKE (A.oldid,'^[[:digit:]]+$')

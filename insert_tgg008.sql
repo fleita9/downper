@@ -60,7 +60,7 @@ CASE
     END
 END as TX_DTOPGO1, 
 CASE
-    WHEN PD.DISCRIMINATOR='CIE' THEN PD.CIEREFERENCE
+    WHEN PD.DISCRIMINATOR='CIE' THEN PD.NMP
     ELSE NULL   --Se llenará con el programa de Heriberto
 END as TX_DTOPGO2, 
 PD.TAGDD as TX_DTOPGO3,
@@ -181,5 +181,8 @@ on TH.platformid = PT.ID
 left join dbsbgl.interredTransaction INTR
 on SH.SALEID = INTR.SALE_ID
 and TH.AUTHORIZATION = trim(INTR.AUTORIZATIONCODE)
-WHERE not exists (select 1 from TGG008_DOWN X WHERE X.CID = TH.ID)
+WHERE 1=1
+and not exists (select 1 from TGG008_DOWN X WHERE X.CID = TH.ID)
 and REGEXP_LIKE (A.oldid,'^[[:digit:]]+$')
+and TH.TIMESTAMP < (current_timestamp - (interval '10' minute))
+order by th.timestamp desc

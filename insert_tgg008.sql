@@ -108,7 +108,10 @@ END as CD_FINANCIAMIENTO,
 'MP2' as TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
 0 as SOBTASA, 
 0 as IM_IMPTO5, 
-(TH.AMOUNT + nvl(TH.USERCHARGE,0)) as IM_TOTCOBRADO, --Cuando el usuario absorbe la comisión, se suma al importe total cobrado
+CASE
+    WHEN nvl(TH.USERCHARGE,0) > 0 THEN (TH.AMOUNT + nvl(TH.USERCHARGE,0) + nvl(TH.IVACHARGE,0))
+    ELSE TH.AMOUNT 
+END as IM_TOTCOBRADO, --Cuando el usuario absorbe la comisión, se suma al importe total cobrado
 '0' as ST_COBRO, 
 '0' as ST_CONTRACARGO,
 null as NU_PARCIALIDAD,
@@ -160,7 +163,8 @@ INTR.CRIPTOGRAM as TX_CRIPTOGRAMA,
 from 
 (
 select * from dbsbgl.transactionhistory 
-where id > 8611200 -- le pondré el ID que tenga al momento de la liberación
+where id > 11924494 -- le pondré el ID que tenga al momento de la liberación
+and timestamp > to_timestamp('2014/08/01','YYYY/MM/DD')
 ) th
 join dbsbgl.salehistory sh
 on TH.SALEHISTORYID = sh.id

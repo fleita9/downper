@@ -137,7 +137,7 @@ PD.TAGAD TDCMM_PROD,
 TH.ID as CID,
 'R' STD,
 CASE
-    WHEN TH.STATUSID IN (select id from dbsbgl.status where keycode in ('AMP', 'AUTH')) THEN 8 --Los estatus autorizados de la 8
+    WHEN TH.STATUSID IN (select id from dbsbgl.status where keycode in ('AMP', 'AUTH','CNC')) THEN 8 --Los estatus autorizados de la 8
     ELSE 6
 END TGG, --Indica si va a la tabla 6 o la 8
 INTR.TRANSACTIONCODE AS CD_TRANSACCION,

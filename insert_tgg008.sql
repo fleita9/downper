@@ -163,8 +163,7 @@ INTR.CRIPTOGRAM as TX_CRIPTOGRAMA,
 from 
 (
 select * from dbsbgl.transactionhistory 
-where id > 11924494 -- le pondré el ID que tenga al momento de la liberación
-and timestamp > to_timestamp('2014/08/01','YYYY/MM/DD')
+where timestamp > to_timestamp('2014/08/01','YYYY/MM/DD')
 ) th
 join dbsbgl.salehistory sh
 on TH.SALEHISTORYID = sh.id

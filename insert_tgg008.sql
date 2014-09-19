@@ -13,24 +13,40 @@ to_number(APC.KEYCODE) as TP_SERVICIO,
         WHEN PD.DISCRIMINATOR = 'CIE' THEN '2'
         WHEN PD.DISCRIMINATOR = 'CLABE' THEN '3'
         WHEN PD.DISCRIMINATOR = 'SUC' THEN '4'
-        WHEN PD.DISCRIMINATOR = 'AMEX' THEN '0'
+        WHEN PD.DISCRIMINATOR = 'AMEX' THEN 
+            CASE                        
+                WHEN P.KEYCODE LIKE('%MSI%') THEN '24' --Meses sin intereses                              
+                ELSE '0'
+            END
         WHEN PD.DISCRIMINATOR = 'CIEINTER' THEN '25'
         WHEN PD.DISCRIMINATOR = 'TDX' THEN
             CASE                                
-                 WHEN TT.KEYCODE = 'PAGO' then '1'
-                 WHEN TT.KEYCODE = 'PGOINT' then '1'
+                 WHEN TT.KEYCODE = 'PAGO' then 
+                    CASE
+                        WHEN P.KEYCODE = 'PB' THEN '11'
+                        WHEN P.KEYCODE LIKE('%SPMSI%') THEN '13' --Skip and Payment
+                        WHEN P.KEYCODE LIKE('%SPMCI%') THEN '14' --Skip and Payment
+                        WHEN P.KEYCODE LIKE('%SP%') THEN '12' --Skip and Payment
+                        WHEN P.BANKPROMOTION = 1 THEN '7' --Financiamiento Bancomer
+                        WHEN P.BANKPROMOTION = 2 THEN '8' --Financiamiento Otros Bancos        
+                        ELSE '1'
+                    END
+                 WHEN TT.KEYCODE = 'PGOINT' then
+                   CASE
+                        WHEN P.KEYCODE = 'PB' THEN '11'
+                        WHEN P.KEYCODE LIKE('%SPMSI%') THEN '13' --Skip and Payment
+                        WHEN P.KEYCODE LIKE('%SPMCI%') THEN '14' --Skip and Payment
+                        WHEN P.KEYCODE LIKE('%SP%') THEN '12' --Skip and Payment
+                        WHEN P.BANKPROMOTION = 1 THEN '7' --Financiamiento Bancomer
+                        WHEN P.BANKPROMOTION = 2 THEN '8' --Financiamiento Otros Bancos        
+                        ELSE '1'
+                    END
                  WHEN TT.KEYCODE = 'CHKIN' then '17'
                  WHEN TT.KEYCODE = 'REAUT' then '18'
                  WHEN TT.KEYCODE = 'CHKOUT' then '19'
                  WHEN TT.KEYCODE = 'PRESAL' then '20'
                  WHEN TT.KEYCODE = 'PSTTIP' then '21'
-                 WHEN TT.KEYCODE = 'PRETIP' then '22'                 
-                WHEN P.KEYCODE = 'PB' THEN '11'
-                WHEN P.KEYCODE LIKE('%SPMSI%') THEN '13' --Skip and Payment
-                 WHEN P.KEYCODE LIKE('%SPMCI%') THEN '14' --Skip and Payment
-                WHEN P.KEYCODE LIKE('%SP%') THEN '12' --Skip and Payment
-                WHEN P.BANKPROMOTION = 1 THEN '7' --Financiamiento Bancomer
-                WHEN P.BANKPROMOTION = 2 THEN '8' --Financiamiento Otros Bancos
+                 WHEN TT.KEYCODE = 'PRETIP' then '22'      
             END              
     END TP_PAGO, 
 TH.AUTHORIZATION as CD_AUTPGO,

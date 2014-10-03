@@ -243,7 +243,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.2' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    'MP2.V1.2.3' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE
@@ -352,5 +352,5 @@ INSERT INTO TGG008_DOWN
       WHERE NOT EXISTS
                (SELECT 1
                   FROM TGG008_DOWN X
-                 WHERE X.CID = DOWN.CID AND X.TGG = DOWN.TGG)
+                 WHERE X.CID = DOWN.CID)
    ORDER BY tm_pago

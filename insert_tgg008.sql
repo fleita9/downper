@@ -119,7 +119,7 @@ INSERT INTO TGG008_DOWN
                                     )
                                 )) is null THEN '04'
                             END
-                        ELSE SH.EXTRAPARAMS 
+                        ELSE '' 
                     END AS tx_param5,
                     TH.AMOUNT AS IM_SERVPGO, --Se revisa que no sea negativo // AMOUNT TIENE EL IMPORTE ORIGINAL
                     CASE
@@ -243,7 +243,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.1' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    'MP2.V1.2.2' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE

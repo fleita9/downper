@@ -1,3 +1,4 @@
+
 INSERT INTO TGG008_DOWN
      SELECT *
        FROM (SELECT CASE
@@ -83,6 +84,41 @@ INSERT INTO TGG008_DOWN
                     '                ' AS tx_param4,
                     CASE
                         WHEN A.OLDID = '10800' THEN (SELECT DETAIL1 FROM DBSBGL.TRANSACTIONHISTORYDETAIL THD WHERE THD.ID = TH.TRXHISTORYDETAILID ) --DETALLE QUE SE BAJA PARA EL SAT ENTIDAD 10800
+                        WHEN A.OLDID = '21' AND N.KEYCODE='882' THEN  --DETALLE QUE SE BAJA PARA PUEBLA MUNICIPIO 
+                            CASE
+                                WHEN P.PROMOTION=1 THEN '0'
+                                ELSE P.PROMOTION
+                            END||'_'||
+                            CASE
+                                WHEN P.PROMOTION in (1,0) THEN '2'
+                                ELSE '1'
+                            END||'_'||
+                            CASE
+                                WHEN SH.REQUESTPARAMS LIKE('%t_origen=0%') THEN '0'
+                                ELSE '1'
+                            END||'_'||
+                            CASE
+                                WHEN (select SHORTNAME from DBSBGL.BANK where IDCOUNTRY=100 and IDBANK in(
+                                    select BANKIDBANK from DBSBGL.binbank where id in(
+                                        select BINBANKID from dbsbgl.paymentdata where id=PD.ID
+                                    )
+                                )) like ('%BANCOMER%') THEN '01'
+                                WHEN (select SHORTNAME from DBSBGL.BANK where IDCOUNTRY=100 and IDBANK in(
+                                    select BANKIDBANK from DBSBGL.binbank where id in(
+                                        select BINBANKID from dbsbgl.paymentdata where id=PD.ID
+                                    )
+                                )) like ('%BANAMEX%') THEN '02'
+                                WHEN (select SHORTNAME from DBSBGL.BANK where IDCOUNTRY=100 and IDBANK in(
+                                    select BANKIDBANK from DBSBGL.binbank where id in(
+                                        select BINBANKID from dbsbgl.paymentdata where id=PD.ID
+                                    )
+                                )) is not null THEN '03'
+                                WHEN (select SHORTNAME from DBSBGL.BANK where IDCOUNTRY=100 and IDBANK in(
+                                    select BANKIDBANK from DBSBGL.binbank where id in(
+                                        select BINBANKID from dbsbgl.paymentdata where id=PD.ID
+                                    )
+                                )) is null THEN '04'
+                            END
                         ELSE SH.EXTRAPARAMS 
                     END AS tx_param5,
                     TH.AMOUNT AS IM_SERVPGO, --Se revisa que no sea negativo // AMOUNT TIENE EL IMPORTE ORIGINAL

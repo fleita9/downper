@@ -1,4 +1,3 @@
-
 INSERT INTO TGG008_DOWN
      SELECT *
        FROM (SELECT CASE
@@ -119,7 +118,7 @@ INSERT INTO TGG008_DOWN
                                     )
                                 )) is null THEN '04'
                             END
-                        ELSE '' 
+                        ELSE SH.EXTRAPARAMS 
                     END AS tx_param5,
                     TH.AMOUNT AS IM_SERVPGO, --Se revisa que no sea negativo // AMOUNT TIENE EL IMPORTE ORIGINAL
                     CASE
@@ -185,6 +184,11 @@ INSERT INTO TGG008_DOWN
                                              WHERE keycode IN ('REJMP'))
                        THEN
                           '2'
+                       WHEN PD.DISCRIMINATOR = 'CLABE' and TH.STATUSID IN (SELECT id
+                                              FROM dbsbgl.status
+                                             WHERE keycode IN ('EMP'))
+                       THEN
+                          '1'
                        ELSE
                           (SELECT ST_PAGO
                              FROM dbsbgl.ad_quickcodes
@@ -243,7 +247,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.3' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    'MP2.V1.2.4' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE
@@ -326,7 +330,7 @@ INSERT INTO TGG008_DOWN
                FROM (SELECT *
                        FROM dbsbgl.transactionhistory
                       WHERE timestamp >
-                               TO_TIMESTAMP ('2014/09/23', 'YYYY/MM/DD')
+                               TO_TIMESTAMP ('2014/10/01', 'YYYY/MM/DD')
                       --and TIMESTAMP < (current_timestamp - (interval '1' minute))
                     ) th
                     JOIN dbsbgl.salehistory sh
@@ -348,7 +352,7 @@ INSERT INTO TGG008_DOWN
                     LEFT JOIN dbsbgl.interredTransaction INTR
                        ON SH.SALEID = INTR.SALE_ID
                           AND TH.AUTHORIZATION = TRIM (INTR.AUTORIZATIONCODE)
-              WHERE 1 = 1 AND REGEXP_LIKE (A.oldid, '^[[:digit:]]+$')) DOWN
+              WHERE 1 = 1 AND REGEXP_LIKE (A.oldid, '^[[:digit:]]+$')) DOWN 
       WHERE NOT EXISTS
                (SELECT 1
                   FROM TGG008_DOWN X

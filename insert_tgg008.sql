@@ -118,6 +118,17 @@ INSERT INTO TGG008_DOWN
                                     )
                                 )) is null THEN '04'
                             END
+                        WHEN A.OLDID in ('10603','10833','10835','10834') THEN --DETALLES QUE SE BAJAN PARA PEMEX
+                            upper(
+                                   replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(calle_c=)[a-zA-Z0-9. ]*&?'),'calle_c=',''),'&','')||'|' 
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(colonia_c=)[a-zA-Z0-9. ]*&?'),'colonia_c=',''),'&','')||'|'
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(delegacion_c=)[a-zA-Z0-9. ]*&?'),'delegacion_c=',''),'&','')||'|'
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(codigo_p=)[a-zA-Z0-9. ]*&?'),'codigo_p=',''),'&','')||'|'
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(ciudad_c=)[a-zA-Z0-9. ]*&?'),'ciudad_c=',''),'&','')||'|'
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(estado_c=)[a-zA-Z0-9. ]*&?'),'estado_c=',''),'&','')||'|'
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(pais_c=)[a-zA-Z0-9. ]*&?'),'pais_c=',''),'&','')||'|'
+                                ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(mp_order=)[a-zA-Z0-9. ]*&?'),'mp_order=',''),'&','')
+                              )                        
                         ELSE SH.EXTRAPARAMS 
                     END AS tx_param5,
                     TH.AMOUNT AS IM_SERVPGO, --Se revisa que no sea negativo // AMOUNT TIENE EL IMPORTE ORIGINAL
@@ -247,7 +258,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.4' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    'MP2.V1.2.5' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE

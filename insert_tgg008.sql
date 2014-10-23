@@ -216,7 +216,7 @@ INSERT INTO TGG008_DOWN
                     END
                        CD_MONEDA,
                     CASE
-                        WHEN PT.KEYCODE ='INTERRED34' THEN NULL
+                        WHEN PT.KEYCODE ='INTERRED34' THEN NULL  --Si no es nulo, las devoluciones en MP1 no funcionan
                         ELSE TO_CHAR (TH.ID)
                     END                      
                     NU_PEDIDO,

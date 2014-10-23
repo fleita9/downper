@@ -215,7 +215,11 @@ INSERT INTO TGG008_DOWN
                        WHEN SH.CURRENCYID = 2 THEN '1'               --Dólares
                     END
                        CD_MONEDA,
-                    TO_CHAR (TH.ID) NU_PEDIDO,
+                    CASE
+                        WHEN PT.KEYCODE ='INTERRED34' THEN NULL
+                        ELSE TO_CHAR (TH.ID)
+                    END                      
+                    NU_PEDIDO,
                     CASE
                        WHEN PT.KEYCODE = 'ECOMMERCE'
                        THEN
@@ -258,7 +262,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.5' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    'MP2.V1.2.6' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE

@@ -81,7 +81,7 @@ INSERT INTO TGG008_DOWN
                     SH.userfullname AS TX_PARAM2,
                     NVL (SH.orderparam, ' ') AS tx_param3,
                     '                ' AS tx_param4,
-                    CASE
+                   substr( CASE
                         WHEN A.OLDID = '10800' THEN (SELECT DETAIL1 FROM DBSBGL.TRANSACTIONHISTORYDETAIL THD WHERE THD.ID = TH.TRXHISTORYDETAILID ) --DETALLE QUE SE BAJA PARA EL SAT ENTIDAD 10800
                         WHEN A.OLDID = '21' AND N.KEYCODE='882' THEN  --DETALLE QUE SE BAJA PARA PUEBLA MUNICIPIO 
                             CASE
@@ -130,7 +130,7 @@ INSERT INTO TGG008_DOWN
                                 ||replace(replace(REGEXP_SUBSTR(REQUESTPARAMS, '&(mp_order=)[a-zA-Z0-9. ]*&?'),'mp_order=',''),'&','')
                               )                        
                         ELSE SH.EXTRAPARAMS 
-                    END AS tx_param5,
+                    END,0,150) AS tx_param5,
                     TH.AMOUNT AS IM_SERVPGO, --Se revisa que no sea negativo // AMOUNT TIENE EL IMPORTE ORIGINAL
                     CASE
                        WHEN TH.COMMERCECHARGE IS NOT NULL
@@ -262,7 +262,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.6' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    'MP2.V1.2.7' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE
@@ -345,7 +345,7 @@ INSERT INTO TGG008_DOWN
                FROM (SELECT *
                        FROM dbsbgl.transactionhistory
                       WHERE timestamp >
-                               TO_TIMESTAMP ('2014/10/01', 'YYYY/MM/DD')
+                               TO_TIMESTAMP ('2014/11/01', 'YYYY/MM/DD')
                       --and TIMESTAMP < (current_timestamp - (interval '1' minute))
                     ) th
                     JOIN dbsbgl.salehistory sh

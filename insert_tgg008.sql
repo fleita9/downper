@@ -78,9 +78,9 @@ INSERT INTO TGG008_DOWN
                        TP_PAGO,
                     TH.AUTHORIZATION AS CD_AUTPGO,
                     SUBSTR(NVL (SH.REFERENCEID, ' '),0,100) AS TX_PARAM1,
-                    SUBSTR(SH.userfullname,0,100)		    AS TX_PARAM2,
-                    SUBSTR(NVL (SH.orderparam, ' '),0,50)	AS tx_param3,
-                    SUBSTR('                ',0,150) 		AS tx_param4,
+                    SUBSTR(SH.userfullname,0,100)            AS TX_PARAM2,
+                    SUBSTR(NVL (SH.orderparam, ' '),0,50)    AS tx_param3,
+                    SUBSTR('                ',0,150)         AS tx_param4,
                    substr( CASE
                         WHEN A.OLDID = '10800' THEN (SELECT DETAIL1 FROM DBSBGL.TRANSACTIONHISTORYDETAIL THD WHERE THD.ID = TH.TRXHISTORYDETAILID ) --DETALLE QUE SE BAJA PARA EL SAT ENTIDAD 10800
                         WHEN A.OLDID = '21' AND N.KEYCODE='882' THEN  --DETALLE QUE SE BAJA PARA PUEBLA MUNICIPIO 
@@ -262,7 +262,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    SUBSTR('MP2.V1.2.7',0,15) AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    SUBSTR('MP2.V1.3.0',0,15) AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE
@@ -344,9 +344,9 @@ INSERT INTO TGG008_DOWN
                     INTR.CONCILIATION AS CD_CONCILIACION
                FROM (SELECT *
                        FROM dbsbgl.transactionhistory
-                      WHERE timestamp >
-                               TO_TIMESTAMP ('2014/11/01', 'YYYY/MM/DD')
-                      --and TIMESTAMP < (current_timestamp - (interval '1' minute))
+                      WHERE timestamp between
+                               TO_TIMESTAMP ('2014/11/12', 'YYYY/MM/DD')
+                      and (current_timestamp - (interval '10' minute)) --Le damos al usuario 10 minutos para terminar el pago
                     ) th
                     JOIN dbsbgl.salehistory sh
                        ON TH.SALEHISTORYID = sh.id

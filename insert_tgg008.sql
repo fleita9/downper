@@ -77,10 +77,10 @@ INSERT INTO TGG008_DOWN
                     END
                        TP_PAGO,
                     TH.AUTHORIZATION AS CD_AUTPGO,
-                    NVL (SH.REFERENCEID, ' ') AS TX_PARAM1,
-                    SH.userfullname AS TX_PARAM2,
-                    NVL (SH.orderparam, ' ') AS tx_param3,
-                    '                ' AS tx_param4,
+                    SUBSTR(NVL (SH.REFERENCEID, ' '),0,100) AS TX_PARAM1,
+                    SUBSTR(SH.userfullname,0,100)		    AS TX_PARAM2,
+                    SUBSTR(NVL (SH.orderparam, ' '),0,50)	AS tx_param3,
+                    SUBSTR('                ',0,150) 		AS tx_param4,
                    substr( CASE
                         WHEN A.OLDID = '10800' THEN (SELECT DETAIL1 FROM DBSBGL.TRANSACTIONHISTORYDETAIL THD WHERE THD.ID = TH.TRXHISTORYDETAILID ) --DETALLE QUE SE BAJA PARA EL SAT ENTIDAD 10800
                         WHEN A.OLDID = '21' AND N.KEYCODE='882' THEN  --DETALLE QUE SE BAJA PARA PUEBLA MUNICIPIO 
@@ -173,18 +173,18 @@ INSERT INTO TGG008_DOWN
                           END
                     END
                        AS TX_DTOPGO1,
-                    CASE
+                    SUBSTR(CASE
                        WHEN PD.DISCRIMINATOR = 'CIE' THEN PD.NMP
                        ELSE NULL     --Se llenará con el programa de Heriberto
-                    END
+                    END,0,50)
                        AS TX_DTOPGO2,
-                    PD.TAGDD AS TX_DTOPGO3,
+                    SUBSTR(PD.TAGDD,0,50) AS TX_DTOPGO3,
                     NULL AS TX_DTOPGO4, --se llenará con programa de Heriberto
-                    SH.USERPHONE AS TX_DTOPGO5,                     --Teléfono
-                    SH.USEREMAIL AS TX_DTOPGO6,
+                    SUBSTR(SH.USERPHONE,0,20) AS TX_DTOPGO5,            --Teléfono
+                    SUBSTR(SH.USEREMAIL,0,50) AS TX_DTOPGO6,
                     TH.TIMESTAMP AS TM_PAGO,
                     NULL AS TM_DISP, --alter table tgg008_down modify tm_disp timestamp
-                    CASE
+                   SUBSTR( CASE
                        WHEN TH.STATUSID IN (SELECT id
                                               FROM dbsbgl.status
                                              WHERE keycode IN ('INT'))
@@ -207,7 +207,7 @@ INSERT INTO TGG008_DOWN
                                   AND instance_name = 'CBGGBP001'
                                   AND newcode = TH.STATUSID
                                   AND ROWNUM = 1)
-                    END
+                    END,0,2)
                        AS ST_PAGO,               --Convertir a ST MULTIPAGOS 1
                     NULL AS TM_CONCIL, --alter table tgg008_down modify tm_concil timestamp
                     CASE
@@ -215,12 +215,12 @@ INSERT INTO TGG008_DOWN
                        WHEN SH.CURRENCYID = 2 THEN '1'               --Dólares
                     END
                        CD_MONEDA,
-                    CASE
+                    SUBSTR(CASE
                         WHEN PT.KEYCODE ='INTERRED34' THEN NULL  --Si no es nulo, las devoluciones en MP1 no funcionan
                         ELSE TO_CHAR (TH.ID)
-                    END                      
+                    END,0,12)                      
                     NU_PEDIDO,
-                    CASE
+                    SUBSTR(CASE
                        WHEN PT.KEYCODE = 'ECOMMERCE'
                        THEN
                           CASE
@@ -253,7 +253,7 @@ INSERT INTO TGG008_DOWN
                        WHEN PT.KEYCODE = 'CIE'
                        THEN
                           '1'
-                    END
+                    END,0,1)
                        CD_ORIGEN,
                     CASE
                        WHEN P.PROMOTION = 1 THEN 0
@@ -262,7 +262,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    'MP2.V1.2.7' AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    SUBSTR('MP2.V1.2.7',0,15) AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE

@@ -239,6 +239,13 @@ INSERT INTO TGG008_DOWN
                              WHEN TH.INPUTTYPE = 'D' THEN '6'
                              WHEN TH.INPUTTYPE = 'I' THEN '7'
                           END
+                       WHEN PT.KEYCODE = 'AMEX'
+                       THEN
+                          CASE
+                             WHEN TH.INPUTTYPE = 'C' THEN '5'
+                             WHEN TH.INPUTTYPE = 'D' THEN '6'
+                             WHEN TH.INPUTTYPE = 'I' THEN '7'
+                          END
                        WHEN PT.KEYCODE = 'ALIGNE'
                        THEN
                           CASE
@@ -262,7 +269,7 @@ INSERT INTO TGG008_DOWN
                        AS CD_FINANCIAMIENTO,
                     0 AS IM_COMISMGO2,
                     0 AS IM_IMPTO4,
-                    SUBSTR('MP2.V1.3.0',0,15) AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
+                    SUBSTR('MP2.V1.3.1',0,15) AS TX_DTOPGO7, --SEBE, se queda vacío, uso el campo para indicar que viene de MP2
                     0 AS SOBTASA,
                     0 AS IM_IMPTO5,
                     CASE

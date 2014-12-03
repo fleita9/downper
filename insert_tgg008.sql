@@ -348,7 +348,27 @@ INSERT INTO TGG008_DOWN
                     '3.4' AS TX_VERSION,
                     INTR.LABELTAG AS CD_LABEL,
                     INTR.AIDTAG AS CD_AID,
-                    INTR.CONCILIATION AS CD_CONCILIACION
+                    INTR.CONCILIATION AS CD_CONCILIACION,
+                    THADETAIL.TRANSMISSIONDATEAN AS TX_DATE_TRANSM,
+                    THADETAIL.SYSTEMTRACEAUDITNU AS TX_SYS_TRACE_NU,
+                    THADETAIL.LOCALTRANSACTIONTI AS TX_DATE_LOC_TRANS,
+                    THADETAIL.FUNCTIONCODE AS CD_FUNCTION_CODE,
+                    THADETAIL.ACQUIRERREFERENCED AS TX_REFERENCE_DATA,
+                    THADETAIL.RETRIEVALREFERENCE AS TX_RET_REFERENCE_NU,
+                    THADETAIL.APPROVALCODE AS TX_APPROVAL_CODE,
+                    THADETAIL.ACTIONCODE AS TX_ACTION_CODE,
+                    THADETAIL.ADDITIONALRESPONSE AS TX_ADD_RESP_DATA,
+                    THADETAIL.AMOUNTADDITIONAL AS TX_AMOUNTS_ADD,
+                    THADETAIL.INTEGRATEDCIRCUITC AS TX_INT_CIRC_CARD,
+                    THADETAIL.ORIGINALDATAELEMEN AS TX_ORIGINAL_DATA,
+                    THADETAIL.PRIVATEUSEDATA2 AS TX_PRIVATE_DATA2,
+                    THADETAIL.ACCEPTORTERMINALID AS CD_CARD_TERMINAL,
+                    THADETAIL.PLANETYPE AS TP_PLAN,
+                    THADETAIL.NOFINSTALLMENTS AS NU_INSTALLMENTS,
+                    THADETAIL.OPERATINGENVIRONME AS TP_OP_ENV,
+                    THADETAIL.CARDHOLDERPRESENT AS TP_CARDH_PRESENT,
+                    THADETAIL.CARDPRESENT AS TP_CARD_PRESENT,
+                    NULL AS TX_DTOSCRIPT
                FROM (SELECT *
                        FROM dbsbgl.transactionhistory
                       WHERE timestamp between
@@ -371,6 +391,8 @@ INSERT INTO TGG008_DOWN
                        ON TH.TRANSACTIONTYPEID = TT.ID
                     JOIN dbsbgl.platform PT
                        ON TH.platformid = PT.ID
+					JOIN dbsbgl.transactionhistorydetailamex THADETAIL
+						ON TH.transactionhistorydetailamexid = THADETAIL.id
                     LEFT JOIN dbsbgl.interredTransaction INTR
                        ON SH.SALEID = INTR.SALE_ID
                           AND TH.AUTHORIZATION = TRIM (INTR.AUTORIZATIONCODE)

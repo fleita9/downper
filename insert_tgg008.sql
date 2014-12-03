@@ -391,8 +391,8 @@ INSERT INTO TGG008_DOWN
                        ON TH.TRANSACTIONTYPEID = TT.ID
                     JOIN dbsbgl.platform PT
                        ON TH.platformid = PT.ID
-					JOIN dbsbgl.transactionhistorydetailamex THADETAIL
-						ON TH.transactionhistorydetailamexid = THADETAIL.id
+                    LEFT JOIN dbsbgl.transactionhistorydetailamex THADETAIL
+                       ON  THADETAIL.id = TH.transactionhistorydetailamexid
                     LEFT JOIN dbsbgl.interredTransaction INTR
                        ON SH.SALEID = INTR.SALE_ID
                           AND TH.AUTHORIZATION = TRIM (INTR.AUTORIZATIONCODE)
